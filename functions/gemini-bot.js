@@ -1,9 +1,8 @@
-
 const axios = require("axios");
 
 exports.handler = async function (event, context) {
   const API_KEY = "AIzaSyA5GPprmi9Fv9wIUbVy7Z06bsIQKvcUnAU";
-  const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro-001:generateContent?key=${API_KEY}`;
+  const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
   try {
     const body = JSON.parse(event.body);
