@@ -1,14 +1,13 @@
-
 const axios = require("axios");
 
 exports.handler = async function (event, context) {
   const API_KEY = "AIzaSyDtb_39cu67ipoh3XpCPe-amYO9tAkrldc";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
 
-  const body = JSON.parse(event.body);
-  const message = body.message || "Merhaba";
-
   try {
+    const body = JSON.parse(event.body);
+    const message = body.message || "Merhaba";
+
     const response = await axios.post(url, {
       contents: [
         {
@@ -27,11 +26,13 @@ exports.handler = async function (event, context) {
       body: JSON.stringify({ reply }),
     };
   } catch (error) {
+    console.error("💥 HATA:", error.message);
+    console.error("🔍 DETAY:", error.response?.data);
     return {
       statusCode: 500,
       body: JSON.stringify({
         error: error.message,
-        details: error.response?.data || "Bilinmeyen hata",
+        details: error.response?.data || "Bilinmeyen sunucu hatası",
       }),
     };
   }
