@@ -1,8 +1,9 @@
+
 const axios = require("axios");
 
 exports.handler = async function (event, context) {
   const API_KEY = "AIzaSyDtb_39cu67ipoh3XpCPe-amYO9tAkrldc";
-  const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${API_KEY}`;
+  const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro-001:generateContent?key=${API_KEY}`;
 
   try {
     const body = JSON.parse(event.body);
@@ -12,9 +13,9 @@ exports.handler = async function (event, context) {
       contents: [
         {
           role: "user",
-          parts: [{ text: message }],
-        },
-      ],
+          parts: [{ text: message }]
+        }
+      ]
     });
 
     const reply =
@@ -23,7 +24,7 @@ exports.handler = async function (event, context) {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ reply }),
+      body: JSON.stringify({ reply })
     };
   } catch (error) {
     console.error("💥 HATA:", error.message);
@@ -32,8 +33,8 @@ exports.handler = async function (event, context) {
       statusCode: 500,
       body: JSON.stringify({
         error: error.message,
-        details: error.response?.data || "Bilinmeyen sunucu hatası",
-      }),
+        details: error.response?.data || "Bilinmeyen sunucu hatası"
+      })
     };
   }
 };
