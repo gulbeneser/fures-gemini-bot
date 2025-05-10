@@ -5,7 +5,7 @@ exports.handler = async (event, context) => {
   const userMessage = JSON.parse(event.body).message || "Merhaba";
 
   const auth = new GoogleAuth({
-    keyFile: 'credentials.json',
+    keyFile: './credentials.json',
     scopes: 'https://www.googleapis.com/auth/cloud-platform'
   });
 
