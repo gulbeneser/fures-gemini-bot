@@ -1,35 +1,38 @@
-const { GoogleAuth } = require('google-auth-library');
-const axios = require('axios');
 
-exports.handler = async (event, context) => {
-  const userMessage = JSON.parse(event.body).message || "Merhaba";
+const axios = require("axios");
 
-  const auth = new GoogleAuth({
-    keyFile: './credentials.json',
-    scopes: 'https://www.googleapis.com/auth/cloud-platform'
-  });
+exports.handler = async function (event, context) {
+  const API_KEY = "AIzaSyDtb_39cu67ipoh3XpCPe-amYO9tAkrldc";
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
 
-  const client = await auth.getClient();
+  const body = JSON.parse(event.body);
+  const message = body.message || "Merhaba";
 
-  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
-
-  const response = await client.request({
-    url,
-    method: 'POST',
-    data: {
+  try {
+    const response = await axios.post(url, {
       contents: [
         {
           role: "user",
-          parts: [{ text: userMessage }]
-        }
-      ]
-    }
-  });
+          parts: [{ text: message }],
+        },
+      ],
+    });
 
-  const result = response.data.candidates?.[0]?.content?.parts?.[0]?.text || "Yanıt alınamadı";
+    const reply =
+      response.data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "Gemini'den yanıt alınamadı.";
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ reply: result })
-  };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ reply }),
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: error.message,
+        details: error.response?.data || "Bilinmeyen hata",
+      }),
+    };
+  }
 };
